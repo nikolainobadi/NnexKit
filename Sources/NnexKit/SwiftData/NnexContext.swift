@@ -14,41 +14,20 @@ public final class NnexContext {
     private let defaultBuildTypeKey = "defaultBuildTypeKey"
     private let tapListFolderPathKey = "tapListFolderPathKey"
     
-    public let appGroupId: String
     public let context: ModelContext
     
-    public init(config: ModelConfiguration? = nil, defaults: UserDefaults? = nil) throws {
+    public init(appGroupId: String, config: ModelConfiguration? = nil, defaults: UserDefaults? = nil) throws {
         if let config, let defaults {
             let container = try ModelContainer(for: SwiftDataTap.self, configurations: config)
             
             self.context = .init(container)
             self.defaults = defaults
-            self.appGroupId = "testingAppGroupId"
         } else {
-            let url = URL(filePath: "../../Resources/config.json", directoryHint: .notDirectory, relativeTo: URL(filePath: #file).deletingLastPathComponent())
-            
-            guard let data = try? Data(contentsOf: url), let json = try? JSONSerialization.jsonObject(with: data) as? [String: String], let appGroupId = json["appGroupId"] else {
-                fatalError("""
-                AppGroupId not found. A valid AppGroupId is required to initialize the shared context.
-                            
-                To fix this, create a file at the following path:
-                    Resources/config.json
-                            
-                The file should contain the following JSON structure:
-                {
-                    "appGroupId": "AppGroupExampleId"
-                }
-                            
-                Replace the example ID with your actual App Group ID.
-                """)
-            }
-            
             let (config, defaults) = try configureSwiftDataContainer(appGroupId: appGroupId)
             let container = try ModelContainer(for: SwiftDataTap.self, configurations: config)
             
             self.context = .init(container)
             self.defaults = defaults
-            self.appGroupId = appGroupId
         }
     }
 }
