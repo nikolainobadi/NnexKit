@@ -21,6 +21,7 @@ public struct DefaultGitHandler {
 // MARK: - Actions
 extension DefaultGitHandler: GitHandler {
     public func commitAndPush(message: String, path: String) throws {
+        try shell.runAndPrint(makeGitCommand(.addAll, path: path))
         try shell.runAndPrint(makeGitCommand(.commit(message), path: path))
         try shell.runAndPrint(makeGitCommand(.push, path: path))
     }

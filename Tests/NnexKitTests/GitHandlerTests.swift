@@ -110,7 +110,19 @@ extension GitHandlerTests {
         #expect(shell.printedCommands[3] == makeGitHubCommand(.createRemoteRepo(name: "TestTap", visibility: visibility.rawValue, details: "A test tap"), path: defaultPath))
         #expect(shell.printedCommands[4] == makeGitCommand(.getRemoteURL, path: defaultPath))
     }
+    
+    @Test("Successfully commits and pushes changes")
+    func commitAndPushSuccess() throws {
+        let commitMessage = "Initial commit"
+        let (sut, shell) = makeSUT()
 
+        try sut.commitAndPush(message: commitMessage, path: defaultPath)
+
+        #expect(shell.printedCommands.count == 3)
+        #expect(shell.printedCommands[0] == makeGitCommand(.addAll, path: defaultPath))
+        #expect(shell.printedCommands[1] == makeGitCommand(.commit(commitMessage), path: defaultPath))
+        #expect(shell.printedCommands[2] == makeGitCommand(.push, path: defaultPath))
+    }
 }
 
 
