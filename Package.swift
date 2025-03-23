@@ -13,6 +13,10 @@ let package = Package(
             name: "NnexKit",
             targets: ["NnexKit"]),
         .library(
+            name: "NnexSwiftUI",
+            targets: ["NnexSwiftUI"]
+        ),
+        .library(
             name: "NnexSharedTestHelpers",
             targets: ["NnexSharedTestHelpers"]
         )
@@ -35,6 +39,12 @@ let package = Package(
         ),
         .target(
             name: "NnexSharedTestHelpers",
+            dependencies: [
+                "NnexKit"
+            ]
+        ),
+        .target(
+            name: "NnexSwiftUI",
             dependencies: [
                 "NnexKit"
             ]

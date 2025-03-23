@@ -14,8 +14,8 @@ public final class NnexContext {
     private let defaultBuildTypeKey = "defaultBuildTypeKey"
     private let tapListFolderPathKey = "tapListFolderPathKey"
     
-    let appGroupId: String
-    let context: ModelContext
+    public let appGroupId: String
+    public let context: ModelContext
     
     public init(config: ModelConfiguration? = nil, defaults: UserDefaults? = nil) throws {
         if let config, let defaults {
