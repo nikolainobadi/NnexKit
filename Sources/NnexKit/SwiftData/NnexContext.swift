@@ -10,10 +10,12 @@ import Foundation
 import NnSwiftDataKit
 
 public final class NnexContext {
-    private let context: ModelContext
     private let defaults: UserDefaults
     private let defaultBuildTypeKey = "defaultBuildTypeKey"
     private let tapListFolderPathKey = "tapListFolderPathKey"
+    
+    let appGroupId: String
+    let context: ModelContext
     
     public init(config: ModelConfiguration? = nil, defaults: UserDefaults? = nil) throws {
         if let config, let defaults {
@@ -21,6 +23,7 @@ public final class NnexContext {
             
             self.context = .init(container)
             self.defaults = defaults
+            self.appGroupId = "testingAppGroupId"
         } else {
             let url = URL(filePath: "../../Resources/config.json", directoryHint: .notDirectory, relativeTo: URL(filePath: #file).deletingLastPathComponent())
             
@@ -45,6 +48,7 @@ public final class NnexContext {
             
             self.context = .init(container)
             self.defaults = defaults
+            self.appGroupId = appGroupId
         }
     }
 }
