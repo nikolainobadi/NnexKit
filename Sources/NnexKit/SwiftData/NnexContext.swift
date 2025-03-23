@@ -22,7 +22,7 @@ public final class NnexContext {
             self.context = .init(container)
             self.defaults = defaults
         } else {
-            let url = URL(filePath: "../Resources/config.json", directoryHint: .notDirectory, relativeTo: URL(filePath: #file).deletingLastPathComponent())
+            let url = URL(filePath: "../../Resources/config.json", directoryHint: .notDirectory, relativeTo: URL(filePath: #file).deletingLastPathComponent())
             
             guard let data = try? Data(contentsOf: url), let json = try? JSONSerialization.jsonObject(with: data) as? [String: String], let appGroupId = json["appGroupId"] else {
                 fatalError("""
