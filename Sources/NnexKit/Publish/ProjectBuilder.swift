@@ -16,11 +16,11 @@ public struct ProjectBuilder {
 
 // MARK: - Build
 public extension ProjectBuilder {
-    func buildProject(name: String, path: String, buildType: BuildType) throws -> BinaryInfo {
+    func buildProject(name: String, path: String, buildType: BuildType, extraBuildArgs: [String]) throws -> BinaryInfo {
         let projectPath = path.hasSuffix("/") ? path : path + "/"
         
         for arch in buildType.archs {
-            try build(for: arch, projectPath: projectPath)
+            try build(for: arch, projectPath: projectPath, extraBuildArgs: extraBuildArgs)
         }
         
         let binaryPath: String
@@ -39,10 +39,10 @@ public extension ProjectBuilder {
 
 // MARK: - Private Methods
 private extension ProjectBuilder {
-    func build(for arch: ReleaseArchitecture, projectPath: String) throws {
+    func build(for arch: ReleaseArchitecture, projectPath: String, extraBuildArgs: [String]) throws {
         print("🔨 Building for \(arch.name)...")
         let buildCommand = """
-        swift build -c release --arch \(arch.name) -Xswiftc -Osize -Xswiftc -wmo -Xlinker -dead_strip_dylibs --package-path \(projectPath)
+        swift build -c release --arch \(arch.name) -Xswiftc -Osize -Xswiftc -wmo -Xlinker -dead_strip_dylibs --package-path \(projectPath) \(extraBuildArgs.joined(separator: " "))
         """
         
         try shell.runAndPrint(buildCommand)

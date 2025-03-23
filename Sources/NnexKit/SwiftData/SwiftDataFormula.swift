@@ -15,15 +15,17 @@ public final class SwiftDataFormula {
     public var license: String
     public var localProjectPath: String
     public var uploadType: FormulaUploadType
+    public var extraBuildArgs: [String]
     public var tap: SwiftDataTap?
     
-    public init(name: String, details: String, homepage: String, license: String, localProjectPath: String, uploadType: FormulaUploadType) {
+    public init(name: String, details: String, homepage: String, license: String, localProjectPath: String, uploadType: FormulaUploadType, extraBuildArgs: [String]) {
         self.name = name
         self.details = details
         self.homepage = homepage
         self.license = license
         self.localProjectPath = localProjectPath
         self.uploadType = uploadType
+        self.extraBuildArgs = extraBuildArgs
     }
 }
 
