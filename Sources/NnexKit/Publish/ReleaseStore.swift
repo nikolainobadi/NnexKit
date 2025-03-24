@@ -31,7 +31,7 @@ extension ReleaseStore {
         let assetURL = try gitHandler.createNewRelease(
             version: versionNumber,
             binaryPath: info.binaryPath,
-            releaseNotes: info.releaseNotes,
+            releaseNoteInfo: info.releaseNoteInfo,
             path: info.projectPath
         )
 

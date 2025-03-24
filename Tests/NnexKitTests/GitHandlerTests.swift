@@ -59,14 +59,14 @@ extension GitHandlerTests {
     func createNewReleaseSuccess() throws {
         let version = "v2.0.0"
         let binaryPath = "/path/to/binary"
-        let releaseNotes = "Release notes for v2.0.0"
+        let releaseNoteInfo = ReleaseNoteInfo(content: "Release notes for v2.0.0", isFromFile: false)
         let (sut, shell) = makeSUT(runResults: [releaseAssetURL])
         
-        let result = try sut.createNewRelease(version: version, binaryPath: binaryPath, releaseNotes: releaseNotes, path: defaultPath)
+        let result = try sut.createNewRelease(version: version, binaryPath: binaryPath, releaseNoteInfo: releaseNoteInfo, path: defaultPath)
         
         #expect(result == releaseAssetURL)
         #expect(shell.printedCommands.count == 2)
-        #expect(shell.printedCommands[0] == makeGitHubCommand(.createNewReleaseWithBinary(version: version, binaryPath: binaryPath, releaseNotes: releaseNotes), path: defaultPath))
+        #expect(shell.printedCommands[0] == makeGitHubCommand(.createNewReleaseWithBinary(version: version, binaryPath: binaryPath, releaseNoteInfo: releaseNoteInfo), path: defaultPath))
         #expect(shell.printedCommands[1] == makeGitHubCommand(.getLatestReleaseAssetURL, path: defaultPath))
     }
     

@@ -83,6 +83,7 @@ private extension ProjectBuilder {
         let buildPath = "\(projectPath).build/universal"
         let universalBinaryPath = "\(buildPath)/\(projectName)"
 
+        // TODO: - maybe move the print statements into a sort of 'progressHandler' to allow UI updates in CLI vs macOS
         print("📂 Creating universal binary folder at: \(buildPath)")
         try shell.runAndPrint("mkdir -p \(buildPath)")
 

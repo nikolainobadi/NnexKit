@@ -5,6 +5,8 @@
 //  Created by Nikolai Nobadi on 3/20/25.
 //
 
+import GitCommandGen
+
 /// Contains information related to a release, including binary path, project path, release notes, and version information.
 public struct ReleaseInfo {
     /// The path to the binary file.
@@ -14,7 +16,7 @@ public struct ReleaseInfo {
     public let projectPath: String
 
     /// The release notes describing the release.
-    public let releaseNotes: String
+    public let releaseNoteInfo: ReleaseNoteInfo
 
     /// The previous version of the release, if available.
     public let previousVersion: String?
@@ -29,10 +31,10 @@ public struct ReleaseInfo {
     ///   - releaseNotes: A description of the release.
     ///   - previousVersion: The previous release version, if applicable.
     ///   - versionInfo: The version information for the release.
-    public init(binaryPath: String, projectPath: String, releaseNotes: String, previousVersion: String?, versionInfo: ReleaseVersionInfo) {
+    public init(binaryPath: String, projectPath: String, releaseNoteInfo: ReleaseNoteInfo, previousVersion: String?, versionInfo: ReleaseVersionInfo) {
         self.binaryPath = binaryPath
         self.projectPath = projectPath
-        self.releaseNotes = releaseNotes
+        self.releaseNoteInfo = releaseNoteInfo
         self.previousVersion = previousVersion
         self.versionInfo = versionInfo
     }

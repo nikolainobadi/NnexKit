@@ -21,6 +21,7 @@ public final class MockGitHandler {
     private(set) public var remoteTapName: String?
     private(set) public var remoteTapPath: String?
     private(set) public var releaseVersion: String?
+    private(set) public var releaseNoteInfo: ReleaseNoteInfo?
     
     public init(remoteURL: String = "", previousVersion: String = "", assetURL: String = "", ghIsInstalled: Bool = true, throwError: Bool = false) {
         self.remoteURL = remoteURL
@@ -68,9 +69,10 @@ extension MockGitHandler: GitHandler {
         return remoteURL
     }
     
-    public func createNewRelease(version: String, binaryPath: String, releaseNotes: String, path: String) throws -> String {
+    public func createNewRelease(version: String, binaryPath: String, releaseNoteInfo: ReleaseNoteInfo, path: String) throws -> String {
         if throwError { throw NSError(domain: "Test", code: 0) }
-        releaseVersion = version
+        self.releaseVersion = version
+        self.releaseNoteInfo = releaseNoteInfo
         return assetURL
     }
 }

@@ -1,5 +1,5 @@
 {
-  "originHash" : "95b6e6fcd23b9564835cdf7030c4fe543a7b452ee5791cd3c063a984f6f4eb80",
+  "originHash" : "5a4aeb4e00bf20a1651489679326ca1038146ce88a5c5781885fe18ac4fbb17e",
   "pins" : [
     {
       "identity" : "files",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nikolainobadi/NnGitKit.git",
       "state" : {
-        "revision" : "1c53036ea1a25d1763baaf9e02ab075ce0423165",
-        "version" : "1.0.0"
+        "branch" : "main",
+        "revision" : "d5eafaf1ce1dd94d6f07db654e2908f9d73b702a"
       }
     },
     {
@@ -25,7 +25,7 @@
       "location" : "https://github.com/nikolainobadi/NnSwiftDataKit.git",
       "state" : {
         "branch" : "main",
-        "revision" : "f8967167825afd9f262732ca3659bf67f3ecc682"
+        "revision" : "dd964918fc6ad29e7811e7145d6ef50342e7d4cb"
       }
     },
     {

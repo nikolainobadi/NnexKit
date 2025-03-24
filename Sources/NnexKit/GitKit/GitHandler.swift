@@ -48,5 +48,5 @@ public protocol GitHandler {
     ///   - releaseNotes: A string containing release notes.
     ///   - path: The file path of the repository.
     /// - Returns: A string representing the release URL.
-    func createNewRelease(version: String, binaryPath: String, releaseNotes: String, path: String) throws -> String
+    func createNewRelease(version: String, binaryPath: String, releaseNoteInfo: ReleaseNoteInfo, path: String) throws -> String
 }

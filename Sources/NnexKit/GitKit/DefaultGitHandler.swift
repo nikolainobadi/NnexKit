@@ -72,8 +72,8 @@ extension DefaultGitHandler: GitHandler {
     ///   - releaseNotes: A string containing release notes.
     ///   - path: The file path of the repository.
     /// - Returns: A string representing the release URL.
-    public func createNewRelease(version: String, binaryPath: String, releaseNotes: String, path: String) throws -> String {
-        let command = makeGitHubCommand(.createNewReleaseWithBinary(version: version, binaryPath: binaryPath, releaseNotes: releaseNotes), path: path)
+    public func createNewRelease(version: String, binaryPath: String, releaseNoteInfo: ReleaseNoteInfo, path: String) throws -> String {
+        let command = makeGitHubCommand(.createNewReleaseWithBinary(version: version, binaryPath: binaryPath, releaseNoteInfo: releaseNoteInfo), path: path)
         try shell.runAndPrint(command)
         return try shell.run(makeGitHubCommand(.getLatestReleaseAssetURL, path: path))
     }

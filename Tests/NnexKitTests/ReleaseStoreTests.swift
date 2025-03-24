@@ -91,7 +91,7 @@ private extension ReleaseStoreTests {
         return (sut, gitHandler)
     }
     
-    func makeReleaseInfo(binaryPath: String = "path/to/binary", projectPath: String = "path/to/project", releaseNotes: String = "release notes", previousVersion: String? = nil, versionInfo: ReleaseVersionInfo = .version("1.0.0")) -> ReleaseInfo {
-        return .init(binaryPath: binaryPath, projectPath: projectPath, releaseNotes: releaseNotes, previousVersion: previousVersion, versionInfo: versionInfo)
+    func makeReleaseInfo(binaryPath: String = "path/to/binary", projectPath: String = "path/to/project", releaseNoteInfo: ReleaseNoteInfo = .init(content: "release notes", isFromFile: false) , previousVersion: String? = nil, versionInfo: ReleaseVersionInfo = .version("1.0.0")) -> ReleaseInfo {
+        return .init(binaryPath: binaryPath, projectPath: projectPath, releaseNoteInfo: releaseNoteInfo, previousVersion: previousVersion, versionInfo: versionInfo)
     }
 }
