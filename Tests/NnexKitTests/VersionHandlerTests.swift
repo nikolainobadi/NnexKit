@@ -57,33 +57,36 @@ private extension VersionHandlerTests {
         
         var majorValues: [(String, String)] {
             return [
-                ("0.0.0", "1.0.0"), ("9.9.9", "10.0.0"), ("v0.0.0", "1.0.0"), ("v9.9.9", "10.0.0"),
-                ("1.0.0", "2.0.0"), ("2.3.4", "3.0.0"), ("v3.2.1", "4.0.0"), ("5.6.7", "6.0.0"), ("v7.8.9", "8.0.0")
+                ("0.0.0", "1.0.0"), ("9.9.9", "10.0.0"), ("v0.0.0", "v1.0.0"), ("v9.9.9", "v10.0.0"),
+                ("1.0.0", "2.0.0"), ("2.3.4", "3.0.0"), ("v3.2.1", "v4.0.0"), ("5.6.7", "6.0.0"), ("v7.8.9", "v8.0.0")
             ]
         }
         
         var minorValues: [(String, String)] {
             return majorValues.map { (version, _) in
+                let hasV = version.hasPrefix("v")
                 let components = version
                     .trimmingCharacters(in: ["v"])
                     .split(separator: ".")
                     .compactMap { Int($0) }
                 
-                let newVersion = "v\(components[0]).\(components[1] + 1).0"
-                return (version, newVersion.trimmingCharacters(in: ["v"]))
+                let newVersion = "\(components[0]).\(components[1] + 1).0"
+                return (version, hasV ? "v\(newVersion)" : newVersion)
             }
         }
         
         var patchValues: [(String, String)] {
             return majorValues.map { (version, _) in
+                let hasV = version.hasPrefix("v")
                 let components = version
                     .trimmingCharacters(in: ["v"])
                     .split(separator: ".")
                     .compactMap { Int($0) }
                 
-                let newVersion = "v\(components[0]).\(components[1]).\(components[2] + 1)"
-                return (version, newVersion.trimmingCharacters(in: ["v"]))
+                let newVersion = "\(components[0]).\(components[1]).\(components[2] + 1)"
+                return (version, hasV ? "v\(newVersion)" : newVersion)
             }
         }
     }
+
 }

@@ -22,7 +22,8 @@ public enum VersionHandler {
     /// - Returns: The incremented version number as a string.
     /// - Throws: An error if the version number could not be incremented.
     public static func incrementVersion(for part: ReleaseVersionInfo.VersionPart, path: String, previousVersion: String) throws -> String {
-        let cleanedVersion = previousVersion.hasPrefix("v") ? String(previousVersion.dropFirst()) : previousVersion
+        let previousVerisonHasV = previousVersion.hasPrefix("v")
+        let cleanedVersion = previousVerisonHasV ? String(previousVersion.dropFirst()) : previousVersion
         var components = cleanedVersion.split(separator: ".").compactMap { Int($0) }
 
         switch part {
@@ -37,6 +38,12 @@ public enum VersionHandler {
             components[2] += 1
         }
 
-        return components.map(String.init).joined(separator: ".")
+        let number = components.map(String.init).joined(separator: ".")
+        
+        if previousVerisonHasV {
+            return "v\(number)"
+        }
+        
+        return number
     }
 }
