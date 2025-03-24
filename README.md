@@ -1,5 +1,6 @@
 # NnexKit
 
+![Build Status](https://github.com/nikolainobadi/NnexKit/actions/workflows/ci.yml/badge.svg)
 ![Swift Version](https://img.shields.io/badge/Swift-6%2B-purple)
 ![Platform](https://img.shields.io/badge/platform-macOS%2014-blue)
 ![License](https://img.shields.io/badge/license-MIT-lightgray)
