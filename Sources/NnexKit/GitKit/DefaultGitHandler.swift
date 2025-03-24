@@ -80,23 +80,7 @@ extension DefaultGitHandler: GitHandler {
 
     /// Verifies if the GitHub CLI (gh) is installed and provides installation instructions if not.
     public func ghVerification() throws {
-        let output = try shell.run("which gh")
-        if output.contains("not found") {
-            print("""
-            GitHub CLI (gh) is not installed on your system. Please install it to proceed.
-            
-            To install using Homebrew:
-            1. Make sure Homebrew is installed: brew --version
-            2. If Homebrew is not installed, run:
-               /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            3. Install GitHub CLI: brew install gh
-            4. Verify installation: gh --version
-
-            Alternatively, install directly using the official script:
-            curl -fsSL https://cli.github.com/install.sh | sudo bash
-
-            Once installed, please rerun this command.
-            """)
+        if try shell.run("which gh").contains("not found") {
             throw NnexError.missingGitHubCLI
         }
     }
