@@ -25,12 +25,6 @@ dependencies: [
 ]
 ```
 
-Then, run the following command to update your Swift packages:
-
-```swift
-
-```
-
 ## Usage
 
 ### Importing the Package
