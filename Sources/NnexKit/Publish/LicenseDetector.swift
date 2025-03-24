@@ -7,10 +7,14 @@
 
 import Files
 
+/// Detects the license type from a given folder.
 public enum LicenseDetector {
+    /// Scans the folder for common license files and attempts to detect the license type.
+    /// - Parameter folder: The folder to scan for a license file.
+    /// - Returns: A string representing the detected license type, or an empty string if none is found.
     public static func detectLicense(in folder: Folder) -> String {
         let licenseFiles = ["LICENSE", "LICENSE.md", "COPYING"]
-        
+
         for fileName in licenseFiles {
             if let file = try? folder.file(named: fileName) {
                 let content = try? file.readAsString()
@@ -27,7 +31,7 @@ public enum LicenseDetector {
                 }
             }
         }
-        
+
         return ""
     }
 }
