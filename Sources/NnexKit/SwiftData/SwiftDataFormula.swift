@@ -27,6 +27,9 @@ public final class SwiftDataFormula {
 
     /// The upload type for the formula (binary or tarball).
     public var uploadType: FormulaUploadType
+    
+    /// The test command to use before building the formula's executable.
+    public var testCommand: TestCommand?
 
     /// Additional build arguments for the formula.
     public var extraBuildArgs: [String]
@@ -42,14 +45,16 @@ public final class SwiftDataFormula {
     ///   - license: The license of the formula.
     ///   - localProjectPath: The local path of the associated project.
     ///   - uploadType: The upload type (binary or tarball).
+    ///   - testCommand: The test command to use before building
     ///   - extraBuildArgs: Additional build arguments.
-    public init(name: String, details: String, homepage: String, license: String, localProjectPath: String, uploadType: FormulaUploadType, extraBuildArgs: [String]) {
+    public init(name: String, details: String, homepage: String, license: String, localProjectPath: String, uploadType: FormulaUploadType, testCommand: TestCommand?, extraBuildArgs: [String]) {
         self.name = name
         self.details = details
         self.homepage = homepage
         self.license = license
         self.localProjectPath = localProjectPath
         self.uploadType = uploadType
+        self.testCommand = testCommand
         self.extraBuildArgs = extraBuildArgs
     }
 }
@@ -63,4 +68,12 @@ public enum FormulaUploadType: String, Codable {
 
     /// Upload as a tarball file.
     case tarball
+}
+
+/// Specifies the command to use for running tests.
+public enum TestCommand: Codable {
+    /// Uses the default `swift test` command.
+    case defaultCommand
+    /// Uses a custom test command provided as a string.
+    case custom(String)
 }

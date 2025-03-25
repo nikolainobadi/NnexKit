@@ -29,4 +29,6 @@ public enum NnexError: Error {
     
     /// There is no previous version available to increment.
     case noPreviousVersionToIncrement
+    
+    case missingExecutable
 }

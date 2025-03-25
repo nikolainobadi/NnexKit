@@ -30,7 +30,7 @@ public extension ProjectBuilder {
     /// - Returns: A BinaryInfo object containing the binary path and SHA256 hash.
     /// - Throws: An error if the build process fails.
     func build() throws -> BinaryInfo {
-        if config.shouldClean {
+        if !config.skipClean {
             try cleanProject()
         }
 

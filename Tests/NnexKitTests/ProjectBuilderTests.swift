@@ -129,7 +129,7 @@ extension ProjectBuilderTests {
     
     @Test("Skips cleaning when indicated")
     func skipsCleaning() throws {
-        let (sut, shell) = makeSUT(runResults: [sha256], shouldClean: false)
+        let (sut, shell) = makeSUT(runResults: [sha256], skipClean: true)
         
         try sut.discardableBuild()
         
@@ -140,25 +140,19 @@ extension ProjectBuilderTests {
 
 // MARK: - SUT
 private extension ProjectBuilderTests {
-    func makeSUT(
-        buildType: BuildType = .universal,
-        runResults: [String] = [],
-        throwShellError: Bool = false,
-        testCommand: BuildConfig.TestCommand? = nil,
-        shouldClean: Bool = true
-    ) -> (sut: ProjectBuilder, shell: MockShell) {
+    func makeSUT(buildType: BuildType = .universal, runResults: [String] = [], throwShellError: Bool = false, testCommand: TestCommand? = nil, skipClean: Bool = false) -> (sut: ProjectBuilder, shell: MockShell) {
         let shell = MockShell(runResults: runResults, shouldThrowError: throwShellError)
-        
         let config = BuildConfig(
             projectName: projectName,
             projectPath: projectPath,
             buildType: buildType,
             extraBuildArgs: extraArgs,
-            shouldClean: shouldClean,
+            skipClean: skipClean,
             testCommand: testCommand
         )
         
         let sut = ProjectBuilder(shell: shell, config: config)
+        
         return (sut, shell)
     }
 }

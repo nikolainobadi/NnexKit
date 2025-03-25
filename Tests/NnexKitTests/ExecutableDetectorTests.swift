@@ -10,31 +10,30 @@ import Testing
 
 struct ExecutableDetectorTests {
     @Test("Returns an array of executable names when multiple executables are present")
-    func parsesMultipleExecutables() {
-        let executables = ExecutableDetector.getExecutables(packageManifestContent: TestData.multipleExecutables)
-        assert(executables == ["FirstExecutable", "SecondExecutable"])
+    func parsesMultipleExecutables() throws {
+        let executables = try ExecutableDetector.getExecutables(packageManifestContent: TestData.multipleExecutables)
+        #expect(executables == ["FirstExecutable", "SecondExecutable"])
     }
 
-    @Test("Returns an empty array when no executables are present")
-    func parsesNoExecutables() {
-        let executables = ExecutableDetector.getExecutables(packageManifestContent: TestData.noExecutables)
-        assert(executables.isEmpty)
+    @Test("Throws error when no executables are present")
+    func throwsWhenNoExecutables() {
+        #expect(throws: NnexError.missingExecutable) {
+            _ = try ExecutableDetector.getExecutables(packageManifestContent: TestData.noExecutables)
+        }
     }
 
-    @Test("Returns array with a single executable when only one executable is present")
-    func parsesSingleExecutable() {
-        let executables = ExecutableDetector.getExecutables(packageManifestContent: TestData.singleExecutable)
-        assert(executables == ["SingleExecutable"])
+    @Test("Returns an array with a single executable when only one executable is present")
+    func parsesSingleExecutable() throws {
+        let executables = try ExecutableDetector.getExecutables(packageManifestContent: TestData.singleExecutable)
+        #expect(executables == ["SingleExecutable"])
     }
 
-    @Test("Ignores malformed executable entries")
-    func ignoresMalformedEntries() {
-        let executables = ExecutableDetector.getExecutables(packageManifestContent: TestData.malformedExecutable)
-        assert(executables == ["ValidExecutable"])
+    @Test("Ignores malformed executable entries and returns valid ones")
+    func ignoresMalformedEntries() throws {
+        let executables = try ExecutableDetector.getExecutables(packageManifestContent: TestData.malformedExecutable)
+        #expect(executables == ["ValidExecutable"])
     }
 }
-
-
 
 // MARK: - Test Data
 private extension ExecutableDetectorTests {
