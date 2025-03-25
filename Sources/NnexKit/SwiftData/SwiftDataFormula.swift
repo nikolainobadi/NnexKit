@@ -62,7 +62,7 @@ public final class SwiftDataFormula {
 
 // MARK: - Dependencies
 /// Represents the upload type for a formula.
-public enum FormulaUploadType: String, Codable {
+public enum FormulaUploadType: String, Codable, Sendable {
     /// Upload as a binary file.
     case binary
 
@@ -71,7 +71,7 @@ public enum FormulaUploadType: String, Codable {
 }
 
 /// Specifies the command to use for running tests.
-public enum TestCommand: Codable {
+public enum TestCommand: Codable, Sendable {
     /// Uses the default `swift test` command.
     case defaultCommand
     /// Uses a custom test command provided as a string.

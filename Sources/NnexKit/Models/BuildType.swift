@@ -6,7 +6,7 @@
 //
 
 /// Represents the build type for a project, specifying the target architecture.
-public enum BuildType: String, CaseIterable {
+public enum BuildType: String, CaseIterable, Sendable {
     /// Universal build, targeting both ARM and Intel architectures.
     case universal
 

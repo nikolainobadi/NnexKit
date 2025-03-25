@@ -6,7 +6,7 @@
 //
 
 /// Represents the configuration for building a project.
-public struct BuildConfig {
+public struct BuildConfig: Sendable {
     /// The name of the project to build.
     public let projectName: String
     /// The file path to the project directory.
