@@ -13,15 +13,16 @@ struct ProjectBuilderTests {
     private let sha256 = "abc123def456"
     private let projectName = "TestProject"
     private let projectPath = "/path/to/project"
+    private let extraArgs = ["extraArg"]
+    private let customTestCommand = "swift test --filter SomeTests"
 }
-
 
 // MARK: - Unit Tests
 extension ProjectBuilderTests {
     @Test("Successfully builds a universal binary")
     func buildUniversalBinary() throws {
         let sut = makeSUT(runResults: [sha256]).sut
-        let result = try getBuildResult(sut: sut)
+        let result = try sut.discardableBuild()
         
         #expect(result.path.contains(projectPath))
         #expect(result.path.contains(projectName))
@@ -33,7 +34,7 @@ extension ProjectBuilderTests {
         let (sut, _) = makeSUT(throwShellError: true)
         
         #expect(throws: (any Error).self) {
-            try getBuildResult(sut: sut)
+            try sut.discardableBuild()
         }
     }
     
@@ -42,7 +43,7 @@ extension ProjectBuilderTests {
         let (sut, _) = makeSUT(runResults: ["some/path"], throwShellError: true)
         
         #expect(throws: (any Error).self) {
-            try getBuildResult(sut: sut)
+            try sut.discardableBuild()
         }
     }
     
@@ -51,14 +52,14 @@ extension ProjectBuilderTests {
         let (sut, _) = makeSUT(runResults: ["some/path"], throwShellError: true)
         
         #expect(throws: (any Error).self) {
-            try getBuildResult(sut: sut)
+            try sut.discardableBuild()
         }
     }
     
     @Test("Successfully builds an arm64 binary")
     func buildArm64Binary() throws {
-        let sut = makeSUT(runResults: [sha256]).sut
-        let result = try getBuildResult(sut: sut, buildType: .arm64)
+        let sut = makeSUT(buildType: .arm64, runResults: [sha256]).sut
+        let result = try sut.discardableBuild()
         
         #expect(result.path.contains(projectPath))
         #expect(result.path.contains("arm64-apple-macosx"))
@@ -68,8 +69,8 @@ extension ProjectBuilderTests {
     
     @Test("Successfully builds an x86_64 binary")
     func buildX86_64Binary() throws {
-        let sut = makeSUT(runResults: [sha256]).sut
-        let result = try getBuildResult(sut: sut, buildType: .x86_64)
+        let sut = makeSUT(buildType: .x86_64, runResults: [sha256]).sut
+        let result = try sut.discardableBuild()
         
         #expect(result.path.contains(projectPath))
         #expect(result.path.contains("x86_64-apple-macosx"))
@@ -79,35 +80,94 @@ extension ProjectBuilderTests {
     
     @Test("Successfully passes extra build arguments")
     func buildWithExtraArgs() throws {
-        let extraArgs = ["-DAPP_GROUP_ID=\\\"group.com.yourcompany.nnexkit\\\""]
         let (sut, shell) = makeSUT(runResults: [sha256])
-        
-        let result = try getBuildResult(sut: sut, extraBuildArgs: extraArgs)
-        
-        // Verify the build command contains the extra arguments
+        let result = try sut.build()
         let expectedCommandPart = extraArgs.joined(separator: " ")
-        #expect(shell.printedCommands.contains { $0.contains(expectedCommandPart) })
         
+        #expect(shell.printedCommands.contains { $0.contains(expectedCommandPart) })
         #expect(result.path.contains(projectPath))
         #expect(result.path.contains(projectName))
         #expect(result.sha256 == sha256, "Expected SHA-256 \(sha256), but got \(result.sha256)")
     }
+    
+    @Test("Runs default test command after build")
+    func runsDefaultTestCommand() throws {
+        let (sut, shell) = makeSUT(runResults: [sha256], testCommand: .defaultCommand)
+        
+        try sut.discardableBuild()
+        
+        #expect(shell.printedCommands.contains { $0.contains("swift test") })
+    }
 
+    @Test("Runs custom test command after build")
+    func runsCustomTestCommand() throws {
+        let (sut, shell) = makeSUT(runResults: [sha256], testCommand: .custom(customTestCommand))
+        
+        try sut.discardableBuild()
+        
+        #expect(shell.printedCommands.contains { $0.contains(customTestCommand) })
+    }
+
+    @Test("Skips running tests if no test command is provided")
+    func skipsRunningTests() throws {
+        let (sut, shell) = makeSUT(runResults: [sha256], testCommand: nil)
+        
+        try sut.discardableBuild()
+        
+        #expect(!shell.printedCommands.contains { $0.contains("swift test") })
+        #expect(!shell.printedCommands.contains { $0.contains(customTestCommand) })
+    }
+    
+    @Test("Includes cleaning by default")
+    func includesCleaning() throws {
+        let (sut, shell) = makeSUT(runResults: [sha256])
+        
+        try sut.discardableBuild()
+        
+        #expect(shell.printedCommands.contains { $0.contains("swift package clean --package-path \(projectPath)") })
+    }
+    
+    @Test("Skips cleaning when indicated")
+    func skipsCleaning() throws {
+        let (sut, shell) = makeSUT(runResults: [sha256], shouldClean: false)
+        
+        try sut.discardableBuild()
+        
+        #expect(!shell.printedCommands.contains { $0.contains("swift package clean --package-path \(projectPath)") })
+    }
 }
+
 
 // MARK: - SUT
 private extension ProjectBuilderTests {
-    func makeSUT(runResults: [String] = [], throwShellError: Bool = false) -> (sut: ProjectBuilder, shell: MockShell) {
+    func makeSUT(
+        buildType: BuildType = .universal,
+        runResults: [String] = [],
+        throwShellError: Bool = false,
+        testCommand: BuildConfig.TestCommand? = nil,
+        shouldClean: Bool = true
+    ) -> (sut: ProjectBuilder, shell: MockShell) {
         let shell = MockShell(runResults: runResults, shouldThrowError: throwShellError)
-        let sut = ProjectBuilder(shell: shell)
+        
+        let config = BuildConfig(
+            projectName: projectName,
+            projectPath: projectPath,
+            buildType: buildType,
+            extraBuildArgs: extraArgs,
+            shouldClean: shouldClean,
+            testCommand: testCommand
+        )
+        
+        let sut = ProjectBuilder(shell: shell, config: config)
         return (sut, shell)
     }
 }
 
 
-// MARK: - Helper Methods
-private extension ProjectBuilderTests {
-    func getBuildResult(sut: ProjectBuilder, buildType: BuildType = .universal, extraBuildArgs: [String] = []) throws -> BinaryInfo {
-        try sut.buildProject(name: projectName, path: projectPath, buildType: buildType, extraBuildArgs: extraBuildArgs)
+// MARK: - Extension Helpers
+public extension ProjectBuilder {
+    @discardableResult
+    func discardableBuild() throws -> BinaryInfo {
+        return try build()
     }
 }
