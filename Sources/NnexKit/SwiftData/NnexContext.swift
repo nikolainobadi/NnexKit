@@ -113,4 +113,8 @@ extension NnexContext {
         formula.tap = tap
         try context.save()
     }
+    
+    public func saveChanges() throws {
+        try context.save()
+    }
 }
