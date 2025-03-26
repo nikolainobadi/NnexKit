@@ -21,7 +21,7 @@ To install NnexKit, add the package to your `Package.swift` file as follows:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/nikolainobadi/NnexKit", from: "1.0.0")
+    .package(url: "https://github.com/nikolainobadi/NnexKit", from: "0.7.0")
 ]
 ```
 
