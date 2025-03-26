@@ -16,13 +16,38 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
+      # Cache Ruby gems (including xcpretty)
+      - name: Cache Ruby gems
+        uses: actions/cache@v3
+        with:
+          path: /usr/local/lib/ruby/gems
+          key: ${{ runner.os }}-ruby-gems
+
+      # Install xcpretty (only if not cached)
+      - name: Install xcpretty
+        run: gem install xcpretty
+
+      # Set up Swift with the specified version
       - name: Set up Swift
         uses: swift-actions/setup-swift@v2
         with:
           swift-version: '6.0'
 
+      # Cache Swift packages and build artifacts
+      - name: Cache Swift packages and build artifacts
+        uses: actions/cache@v3
+        with:
+          path: |
+            .build
+            .swiftpm
+          key: ${{ runner.os }}-swiftpm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-swiftpm-
+
+      # Display Swift version for debugging
       - name: Display Swift Version
         run: swift --version
 
+      # Build and Test the project with code coverage and clean output
       - name: Build and Test
-        run: swift test --enable-code-coverage
+        run: swift test --enable-code-coverage | xcpretty
